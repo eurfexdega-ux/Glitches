@@ -1,4 +1,4 @@
-("local Players = game:GetService("Players")
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
@@ -441,46 +441,38 @@ local function createFeature(text, linkedBtn, layoutOrder, slidersConfig, subTog
                 if isMainSpeedGlitchEnabled then
                     for _, item in ipairs(visualItems) do
                         if item.type == "main" then setVis(item, not isLegitSpeedEnabled)
-                        elseif item.type == "legit" then 
-                        setVis(item, isLegitSpeedEnabled)
+                        elseif item.type == "legit" then setVis(item, isLegitSpeedEnabled)
+         end
                     end
                 end
-            end
-        end)
-    end
-end
-
--- Toggle chính
-local active = false
-switchBg.MouseButton1Click:Connect(function()
-    active = not active
-
-    if active then
-        tweenObj(switchBg, {BackgroundColor3 = Color3.fromRGB(255,255,255)})
-        tweenObj(knob, {Position = UDim2.new(1, -19, 0.5, -8), BackgroundColor3 = Color3.fromRGB(0,0,0)})
-        if linkedBtn then linkedBtn.Visible = true end
-    else
-        tweenObj(switchBg, {BackgroundColor3 = Color3.fromRGB(40,40,40)})
-        tweenObj(knob, {Position = UDim2.new(0, 3, 0.5, -8), BackgroundColor3 = Color3.fromRGB(150,150,150)})
-        if linkedBtn then linkedBtn.Visible = false end
-    end
-
-    if text == "Speed Glitch" then
-        isMainSpeedGlitchEnabled = active
-    elseif text == "Macro" then
-        isMacroEnabled = active
-    end
-
-    for _, item in ipairs(visualItems) do
-        if item.type == "main" then
-            setVis(item, active and not isLegitSpeedEnabled)
-        elseif item.type == "legit" then
-            setVis(item, active and isLegitSpeedEnabled)
-        elseif item.type == "subToggle" then
-            setVis(item, active)
+            end)
         end
     end
-end)
 
-return group
-    end
+    -- MAIN TOGGLE
+    local active = false
+    switchBg.MouseButton1Click:Connect(function()
+        active = not active
+
+        if active then
+            tweenObj(switchBg, {BackgroundColor3 = Color3.fromRGB(255, 255, 255)})
+            tweenObj(knob, {Position = UDim2.new(1, -19, 0.5, -8), BackgroundColor3 = Color3.fromRGB(0, 0, 0)})
+
+            if linkedBtn then linkedBtn.Visible = true end
+
+            for _, item in ipairs(visualItems) do
+                setVis(item, true)
+            end
+
+        else
+            tweenObj(switchBg, {BackgroundColor3 = Color3.fromRGB(40, 40, 40)})
+            tweenObj(knob, {Position = UDim2.new(0, 3, 0.5, -8), BackgroundColor3 = Color3.fromRGB(150, 150, 150)})
+
+            if linkedBtn then linkedBtn.Visible = false end
+
+            for _, item in ipairs(visualItems) do
+                setVis(item, false)
+            end
+        end
+    end)
+end
