@@ -391,9 +391,39 @@ RunService.Heartbeat:Connect(function()
         end
     end
  
--- Macro Spin
-    if states.macro and isMacroEnabled then
-        local cf = camera.CFrame
-        camera.CFrame = cf * CFrame.Angles(0, math.rad(camSpinSpeed), 0)
+btnFlick.MouseButton1Click:Connect(function()
+    if player.Character then
+        local root = player.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.Velocity = root.CFrame.LookVector * 100 + Vector3.new(0, 50, 0)
+        end
     end
 end)
+
+        btnLadder.MouseButton1Click:Connect(function()
+    if player.Character then
+        local root = player.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.Velocity = Vector3.new(0, 120, 0)
+        end
+    end
+end)
+
+        btnUltra.MouseButton1Click:Connect(function()
+    if player.Character then
+        local root = player.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            isNoclipping = true
+            local bv = Instance.new("BodyVelocity")
+            bv.Velocity = camera.CFrame.LookVector * noclipPower
+            bv.MaxForce = Vector3.new(1,1,1) * 1e5
+            bv.Parent = root
+
+            task.wait(noclipTime)
+            bv:Destroy()
+            isNoclipping = false
+        end
+    end
+end)
+
+        
