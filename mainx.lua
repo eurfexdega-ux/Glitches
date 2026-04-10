@@ -782,50 +782,71 @@ end)​
 ​
 print("Seekit.glitch v0.1.1 Loaded | Valware Core Integrated")​
 
-semblyLinearVelocity =
-Vector3.new(root.AssemblyLinearVelocity.X, 60,
-root.AssemblyLinearVelocity.Z)​
-local o = camera.CFrame​
-camera.CFrame = o * CFrame.Angles(0, math.rad(-90), 0)​
-task.wait(0.01); camera.CFrame = o​
-end​
-end)​
-​
-btnUltra.MouseButton1Click:Connect(function()​
-if not IS_GLOBAL_LOCKED or isNoclipping or not player.Character
-then return end​
-isNoclipping = true​
-local startTick = tick()​
-local connection​
-connection = RunService.Stepped:Connect(function(_, dt)​
-if tick() - startTick >= noclipTime then
-connection:Disconnect(); isNoclipping = false; return end​
+-- ==========================================
+-- AUTO FIX CORE (DROP-IN, NO TOUCH)
+-- ==========================================
+task.spawn(function()
+    repeat task.wait() until game:IsLoaded()
+    local player = game:GetService("Players").LocalPlayer
+    if not player then return end
 
-for _, p in pairs(player.Character:GetDescendants()) do if
-p:IsA("BasePart") then p.CanCollide = false end end​
-local hrp =
-player.Character:FindFirstChild("HumanoidRootPart")​
-if hrp then hrp.CFrame *= CFrame.new(0, 0, noclipPower * dt)
-end​
-end)​
-end)​
-​
-print("Seekit.glitch v0.1.1 Loaded | Valware Core Integrated")​
+    task.wait(1)
 
--- AUTO FIX (khỏi chỉnh tay)
-task.wait(1)
+    -- =========================
+    -- FORCE ENABLE FEATURES
+    -- =========================
+    pcall(function()
+        isNormalGlitchEnabled = true
+        isLegitGlitchEnabled = false
+        isMacroEnabled = true
+        states.glitch = false
+        states.macro = false
+    end)
 
--- Bật hết feature
-isNormalGlitchEnabled = true
-isLegitGlitchEnabled = false
-isMacroEnabled = true
+    -- =========================
+    -- FORCE SHOW BUTTONS
+    -- =========================
+    pcall(function()
+        for _, v in pairs(player.PlayerGui:GetDescendants()) do
+            if v:IsA("TextButton") then
+                v.Visible = true
+                v.AutoButtonColor = true
+            end
+        end
+    end)
 
--- Hiện toàn bộ nút
-for _, v in pairs(game.Players.LocalPlayer.PlayerGui:GetDescendants()) do
-    if v:IsA("TextButton") then
-        v.Visible = true
+    -- =========================
+    -- FIX BUTTON NOT WORKING
+    -- =========================
+    local function bindHold(btn, stateName)
+        if not btn then return end
+
+        btn.InputBegan:Connect(function(i)
+            if i.UserInputType == Enum.UserInputType.Touch or i.UserInputType == Enum.UserInputType.MouseButton1 then
+                states[stateName] = true
+            end
+        end)
+
+        btn.InputEnded:Connect(function(i)
+            if i.UserInputType == Enum.UserInputType.Touch or i.UserInputType == Enum.UserInputType.MouseButton1 then
+                states[stateName] = false
+            end
+        end)
     end
-end
 
-print("AUTO FIX LOADED")
-
+    pcall(function()
+        bindHold(btnGlitch, "glitch")
+        bindHold(btnMacro, "macro")
+    end)
+
+    -- =========================
+    -- SAFETY: CHARACTER RESET FIX
+    -- =========================
+    player.CharacterAdded:Connect(function()
+        task.wait(1)
+        states.glitch = false
+        states.macro = false
+    end)
+
+    print("🔥 AUTO FIX CORE LOADED")
+end)
