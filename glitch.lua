@@ -391,3 +391,9 @@ RunService.Heartbeat:Connect(function()
         end
     end
  
+-- Macro Spin
+    if states.macro and isMacroEnabled then
+        local cf = camera.CFrame
+        camera.CFrame = cf * CFrame.Angles(0, math.rad(camSpinSpeed), 0)
+    end
+end)
