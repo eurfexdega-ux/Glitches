@@ -812,4 +812,20 @@ end)​
 ​
 print("Seekit.glitch v0.1.1 Loaded | Valware Core Integrated")​
 
+-- AUTO FIX (khỏi chỉnh tay)
+task.wait(1)
+
+-- Bật hết feature
+isNormalGlitchEnabled = true
+isLegitGlitchEnabled = false
+isMacroEnabled = true
+
+-- Hiện toàn bộ nút
+for _, v in pairs(game.Players.LocalPlayer.PlayerGui:GetDescendants()) do
+    if v:IsA("TextButton") then
+        v.Visible = true
+    end
+end
+
+print("AUTO FIX LOADED")
 
